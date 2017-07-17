@@ -121,8 +121,9 @@ open class SlideMenuController: UIViewController, UIGestureRecognizerDelegate {
         mainContainerView.backgroundColor = UIColor.clear
         mainContainerView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         view.insertSubview(mainContainerView, at: 0)
+        setUpViewController(mainContainerView, targetViewController: mainViewController)
 
-      var opacityframe: CGRect = view.bounds
+        var opacityframe: CGRect = view.bounds
         let opacityOffset: CGFloat = 0
         opacityframe.origin.y = opacityframe.origin.y + opacityOffset
         opacityframe.size.height = opacityframe.size.height - opacityOffset
@@ -132,33 +133,35 @@ open class SlideMenuController: UIViewController, UIGestureRecognizerDelegate {
         opacityView.layer.opacity = 0.0
         view.insertSubview(opacityView, at: 1)
       
-      if leftViewController != nil {
-        var leftFrame: CGRect = view.bounds
-        leftFrame.size.width = SlideMenuOptions.leftViewWidth
-        leftFrame.origin.x = leftMinOrigin()
-        let leftOffset: CGFloat = 0
-        leftFrame.origin.y = leftFrame.origin.y + leftOffset
-        leftFrame.size.height = leftFrame.size.height - leftOffset
-        leftContainerView = UIView(frame: leftFrame)
-        leftContainerView.backgroundColor = UIColor.clear
-        leftContainerView.autoresizingMask = UIViewAutoresizing.flexibleHeight
-        view.insertSubview(leftContainerView, at: 2)
-        addLeftGestures()
-      }
+        if leftViewController != nil {
+            var leftFrame: CGRect = view.bounds
+            leftFrame.size.width = SlideMenuOptions.leftViewWidth
+            leftFrame.origin.x = leftMinOrigin()
+            let leftOffset: CGFloat = 0
+            leftFrame.origin.y = leftFrame.origin.y + leftOffset
+            leftFrame.size.height = leftFrame.size.height - leftOffset
+            leftContainerView = UIView(frame: leftFrame)
+            leftContainerView.backgroundColor = UIColor.clear
+            leftContainerView.autoresizingMask = UIViewAutoresizing.flexibleHeight
+            view.insertSubview(leftContainerView, at: 2)
+            addLeftGestures()
+            setUpViewController(leftContainerView, targetViewController: leftViewController)
+        }
       
-      if rightViewController != nil {
-        var rightFrame: CGRect = view.bounds
-        rightFrame.size.width = SlideMenuOptions.rightViewWidth
-        rightFrame.origin.x = rightMinOrigin()
-        let rightOffset: CGFloat = 0
-        rightFrame.origin.y = rightFrame.origin.y + rightOffset
-        rightFrame.size.height = rightFrame.size.height - rightOffset
-        rightContainerView = UIView(frame: rightFrame)
-        rightContainerView.backgroundColor = UIColor.clear
-        rightContainerView.autoresizingMask = UIViewAutoresizing.flexibleHeight
-        view.insertSubview(rightContainerView, at: 3)
-        addRightGestures()
-      }
+        if rightViewController != nil {
+            var rightFrame: CGRect = view.bounds
+            rightFrame.size.width = SlideMenuOptions.rightViewWidth
+            rightFrame.origin.x = rightMinOrigin()
+            let rightOffset: CGFloat = 0
+            rightFrame.origin.y = rightFrame.origin.y + rightOffset
+            rightFrame.size.height = rightFrame.size.height - rightOffset
+            rightContainerView = UIView(frame: rightFrame)
+            rightContainerView.backgroundColor = UIColor.clear
+            rightContainerView.autoresizingMask = UIViewAutoresizing.flexibleHeight
+            view.insertSubview(rightContainerView, at: 3)
+            addRightGestures()
+            setUpViewController(rightContainerView, targetViewController: rightViewController)
+        }
     }
   
     open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -206,14 +209,7 @@ open class SlideMenuController: UIViewController, UIGestureRecognizerDelegate {
     open override var shouldAutorotate : Bool {
         return mainViewController?.shouldAutorotate ?? false
     }
-        
-    open override func viewWillLayoutSubviews() {
-        // topLayoutGuideの値が確定するこのタイミングで各種ViewControllerをセットする
-        setUpViewController(mainContainerView, targetViewController: mainViewController)
-        setUpViewController(leftContainerView, targetViewController: leftViewController)
-        setUpViewController(rightContainerView, targetViewController: rightViewController)
-    }
-    
+
     open override var preferredStatusBarStyle: UIStatusBarStyle {
         return self.mainViewController?.preferredStatusBarStyle ?? .default
     }
